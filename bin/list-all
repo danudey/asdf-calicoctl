@@ -3,10 +3,12 @@
 set -euo pipefail
 
 function get_tags() {
-    git ls-remote --q -t https://github.com/projectcalico/calico "refs/tags/v*-calicoctl" | awk -F/ '/v[0-9]+\.[0-9]+\.[0-9]+-calicoctl/ {print $3}'
+    git ls-remote --q -t https://github.com/projectcalico/calico "refs/tags/v*" | awk -F/ \
+    '/v[0-9]+\.[0-9]+\.[0-9]+$/ {print $3}'
 }
 
 for tag in $(get_tags); do
-    echo ${tag%%-calicoctl} | tr -d 'v'
+    echo ${tag##v}
 done | sort -uV | tr '\n' ' '
+echo
 
